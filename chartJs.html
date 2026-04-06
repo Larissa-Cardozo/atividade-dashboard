@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard com Chart.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+
+        <section class="hero">
+            <h1>Dashboard de Fluxo de Pessoas</h1>
+            <p>Visualização em Chart.js baseada nas tabelas do arquivo Excel, mantendo os mesmos títulos, categorias e tipos de gráfico da planilha original.</p>
+        </section>
+
+        <h2 class="titulo">Dashboard Geral</h2>
+
+        <section class="flex">
+            <div class="card">
+                <h2>Fluxo de pessoas por horário</h2>
+                <p>Evolução horária por corredor.</p>
+                <div class="chart-box">
+                    <canvas id="fluxoHorarioGeral"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Total do fluxo de pessoas por semana</h2>
+                <p>Comparativo diário do total de pessoas.</p>
+                <div class="chart-box">
+                    <canvas id="fluxoSemanalGeral"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Percentual do fluxo diário por corredor</h2>
+                <p>Participação de cada corredor no fluxo diário.</p>
+                <div class="chart-box">
+                    <canvas id="percentualCorredor"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <h2 class="titulo">Dashboard Específica</h2>
+
+        <section class="flex">
+            <div class="card">
+                <h2>Fluxo do corredor ao longo do dia</h2>
+                <p>Volume por horário do sensor selecionado.</p>
+                <div class="chart-box">
+                    <canvas id="fluxoHorarioEspecifico"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Distribuição do fluxo por período</h2>
+                <p>Divisão do fluxo entre manhã, tarde e noite.</p>
+                <div class="chart-box">
+                    <canvas id="fluxoPeriodo"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Fluxo total do sensor na semana</h2>
+                <p>Total semanal consolidado do sensor.</p>
+                <div class="chart-box">
+                    <canvas id="fluxoSemanalEspecifico"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const horarioLabels = [
+            "10:00", "11:00", "12:00", "13:00", "14:00",
+            "15:00", "16:00", "17:00", "18:00", "19:00"
+        ];
+
+        const diasSemana = [
+            "Segunda",
+            "Terça",
+            "Quarta",
+            "Quinta",
+            "Sexta",
+            "Sábado",
+            "Domingo"
+        ];
+
+        const geralHorario = {
+            labels: horarioLabels,
+            datasets: [
+                {
+                    label: "Corredor 1",
+                    data: [11, 13, 33, 40, 31, 26, 24, 30, 38, 32],
+                    borderColor: "#2563eb"
+                },
+                {
+                    label: "Corredor 2",
+                    data: [7, 10, 19, 26, 13, 11, 7, 14, 20, 15],
+                    borderColor: "#0f766e"
+                },
+                {
+                    label: "Corredor 3",
+                    data: [8, 10, 22, 36, 20, 20, 23, 29, 35, 29],
+                    borderColor: "#ea580c"
+                }
+            ]
+        };
+
+        const geralSemanal = {
+            labels: diasSemana,
+            datasets: [{
+                label: "Total",
+                data: [247, 576, 609, 587, 579, 629, 918],
+                backgroundColor: ["#93c5fd", "#60a5fa", "#3b82f6", "#2563eb", "#1d4ed8", "#1e40af", "#172554"],
+                maxBarThickness: 40
+            }]
+        };
+
+        const geralPercentual = {
+            labels: ["Corredor 1", "Corredor 2", "Corredor 3"],
+            datasets: [{
+                label: "Total do fluxo",
+                data: [246, 127, 203],
+                backgroundColor: ["#2553eb", "#0f761e", "#ea489c"],
+                borderWidth: 0
+            }]
+        };
+
+        const especificoHorario = {
+            labels: horarioLabels,
+            datasets: [
+                {
+                    label: "Fluxo",
+                    data: [11, 13, 33, 40, 31, 26, 24, 30, 38, 32],
+                    borderColor: "#dc2626"
+                }
+            ]
+        };
+
+        const especificoPeriodo = {
+            labels: ["Manhã", "Tarde", "Noite"],
+            datasets: [{
+                label: "Fluxo",
+                data: [24, 184, 70],
+                backgroundColor: ["#f59e0b", "#2563eb", "#7c3aed"],
+                borderWidth: 0
+            }]
+        };
+
+        const especificoSemanal = {
+            labels: diasSemana,
+            datasets: [{
+                label: "Fluxo total",
+                data: [94, 246, 280, 266, 259, 286, 384],
+                backgroundColor: ["#86efac", "#4ade80", "#22c55e", "#16a34a", "#15803d", "#166534", "#14532d"],
+                maxBarThickness: 40
+            }]
+        };
+
+        new Chart(document.getElementById("fluxoHorarioGeral"), {
+            type: "line",
+            data: geralHorario,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: "index",
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            usePointStyle: true,
+                            boxWidth: 10,
+                            color: "#fff"
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: "rgba(15, 23, 42, 0.92)",
+                        titleColor: "#fff",
+                        bodyColor: "#e5eefb",
+                        padding: 12
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: "#fff"
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: "#fff"
+                        },
+                        ticks: {
+                            color: "#fff",
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById("fluxoSemanalGeral"), {
+            type: "bar",
+            data: geralSemanal,
+            options: {
+                indexAxis: "x",
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: "#fff"
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: "#fff"
+                        },
+                        ticks: {
+                            color: "#fff"
+                        }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById("percentualCorredor"), {
+            type: "pie",
+            data: geralPercentual,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "bottom",
+                        labels: {
+                            usePointStyle: true,
+                            color: "#fff"
+                        }
+                    },
+                    tooltip: {
+                        titleColor: "#fff"
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById("fluxoHorarioEspecifico"), {
+            type: "line",
+            data: especificoHorario,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: "index",
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            usePointStyle: true,
+                            color: "#fff"
+                        }
+                    },
+                    tooltip: {
+                        titleColor: "#fff",
+                        padding: 12
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: "#fff"
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: "#fff"
+                        },
+                        ticks: {
+                            color: "#fff"
+                        }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById("fluxoPeriodo"), {
+            type: "pie",
+            data: especificoPeriodo,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "bottom",
+                        labels: {
+                            usePointStyle: true,
+                            padding: 18,
+                            color: "#fff"
+                        }
+                    },
+                    tooltip: {
+                        titleColor: "#fff"
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById("fluxoSemanalEspecifico"), {
+            type: "bar",
+            data: especificoSemanal,
+            options: {
+                indexAxis: "x",
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: "rgba(15, 23, 42, 0.92)",
+                        titleColor: "#fff"
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: "#fff"
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: "#fff"
+                        },
+                        ticks: {
+                            color: "#fff"
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

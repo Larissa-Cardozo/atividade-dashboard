@@ -1,0 +1,76 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #1f2937;;
+    background: linear-gradient(135deg, #1d4ed8, #0f172a);
+    }
+
+.container{
+    width: 80%;
+    margin: 0 auto;
+    padding: 40px 0 40px;
+    }
+
+.hero{
+    background: #0b004b;
+    color: #fff;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+    width: 70%;
+    }
+
+.hero h1{
+    margin: 0 0px;
+    font-size: 40px;
+    }
+
+.hero p{
+    margin: 0;
+    max-width: 760px;
+    color: #fff;
+    line-height: 1.5;
+    }
+
+.titulo{
+    margin: 28px 0 14px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    }
+
+.flex{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    }
+
+.card {
+    background: #0b004b;
+    border: 1px solid #0b004b;
+    border-radius: 22px;
+    padding: 18px;
+    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
+    width: 390px;
+    }
+
+.card h2 {
+    margin: 0 0 6px;
+    font-size: 25px;
+    color: #cdddff;
+    }
+
+.card p {
+    margin: 0 0 14px;
+    color: #bcd2ff;;
+    font-size: 14px;
+}
+
+.chart-box {
+    position: relative;
+    height: 300px;
+    }
